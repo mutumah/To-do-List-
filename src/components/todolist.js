@@ -11,7 +11,7 @@ const TodoList = () => {
     new Date().toISOString().split("T")[0] // Default to today
   );
 
-  // Load tasks from localStorage on mount
+
   useEffect(() => {
     const storedTasks = JSON.parse(localStorage.getItem("tasks"));
     if (storedTasks) {
@@ -19,12 +19,11 @@ const TodoList = () => {
     }
   }, []);
 
-  // Save tasks to localStorage whenever tasks change
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
-  // Optimize Dark Mode Toggle
+  // Dark Mode Toggle
   useLayoutEffect(() => {
     if (darkMode) {
       document.body.classList.add("dark-mode");
@@ -34,14 +33,14 @@ const TodoList = () => {
     localStorage.setItem("darkMode", darkMode ? "enabled" : "disabled");
   }, [darkMode]);
 
-  // Function to request Notification Permission
+  // request Notification Permission
   const requestNotificationPermission = () => {
     if ("Notification" in window) {
       Notification.requestPermission();
     }
   };
 
-  // Function to schedule a reminder
+  // Schedule a reminder
   const scheduleReminder = (task) => {
     if (!("Notification" in window) || Notification.permission !== "granted") {
       return;
@@ -56,7 +55,7 @@ const TodoList = () => {
         body: `Reminder: ${task.text} is due today!`,
       });
     } else {
-      // Set the reminder for 9 AM on the due date
+      // Set reminder for 9 AM on the due date
       taskDate.setHours(9, 0, 0, 0);
       const timeUntilReminder = taskDate - now;
 
@@ -70,7 +69,7 @@ const TodoList = () => {
     }
   };
 
-  // Function to add a new task and set a reminder
+  // Add a new task and set a reminder
   const addTask = () => {
     if (input.trim() !== "") {
       const newTask = {
@@ -86,14 +85,14 @@ const TodoList = () => {
     }
   };
 
-  // Function to toggle task completion
+  // Toggle task completion
   const toggleComplete = (taskText) => {
     setTasks(tasks.map(task => 
       task.text === taskText ? { ...task, completed: !task.completed } : task
     ));
   };
 
-  // Function to move a task to the next day
+  // Move a task to the next day
   const moveToTomorrow = (taskText) => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -104,7 +103,7 @@ const TodoList = () => {
     ));
   };
 
-  // Function to carry over incomplete tasks to today
+  // Carry over incomplete tasks to today
   const carryOverTasks = () => {
     const today = new Date().toISOString().split("T")[0];
     const updatedTasks = tasks.map((task) =>
@@ -116,7 +115,7 @@ const TodoList = () => {
   // Run carry-over function on mount
   useEffect(() => {
     carryOverTasks();
-  }, []);
+  }, [carryOverTasks]);
 
   // Request notification permission when the app loads
   useEffect(() => {

@@ -168,7 +168,6 @@ h4 {
   background: darkorange;
 }
 
-/* Responsive Design */
 @media (max-width: 480px) {
   .todo-container {
     width: 95%;
