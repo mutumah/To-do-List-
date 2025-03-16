@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useCallback } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import "./TodoList.css";
 
 const TodoList = () => {
