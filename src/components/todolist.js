@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect, useCallback } from "react";
 import "./TodoList.css";
 
 const TodoList = () => {
@@ -8,9 +8,8 @@ const TodoList = () => {
   const [tasks, setTasks] = useState([]);
   const [input, setInput] = useState("");
   const [selectedDate, setSelectedDate] = useState(
-    new Date().toISOString().split("T")[0] // Default to today
+    new Date().toISOString().split("T")[0] 
   );
-
 
   useEffect(() => {
     const storedTasks = JSON.parse(localStorage.getItem("tasks"));
@@ -33,7 +32,7 @@ const TodoList = () => {
     localStorage.setItem("darkMode", darkMode ? "enabled" : "disabled");
   }, [darkMode]);
 
-  // request Notification Permission
+  // Request Notification Permission
   const requestNotificationPermission = () => {
     if ("Notification" in window) {
       Notification.requestPermission();
@@ -50,12 +49,10 @@ const TodoList = () => {
     const now = new Date();
 
     if (taskDate.toDateString() === now.toDateString()) {
-      // If the task is for today, notify immediately
       new Notification("Task Reminder", {
         body: `Reminder: ${task.text} is due today!`,
       });
     } else {
-      // Set reminder for 9 AM on the due date
       taskDate.setHours(9, 0, 0, 0);
       const timeUntilReminder = taskDate - now;
 
@@ -87,7 +84,7 @@ const TodoList = () => {
 
   // Toggle task completion
   const toggleComplete = (taskText) => {
-    setTasks(tasks.map(task => 
+    setTasks(tasks.map(task =>
       task.text === taskText ? { ...task, completed: !task.completed } : task
     ));
   };
@@ -98,24 +95,34 @@ const TodoList = () => {
     tomorrow.setDate(tomorrow.getDate() + 1);
     const tomorrowDate = tomorrow.toISOString().split("T")[0];
 
-    setTasks(tasks.map(task => 
+    setTasks(tasks.map(task =>
       task.text === taskText ? { ...task, date: tomorrowDate } : task
     ));
   };
 
   // Carry over incomplete tasks to today
-  const carryOverTasks = () => {
+  useEffect(() => {
     const today = new Date().toISOString().split("T")[0];
     const updatedTasks = tasks.map((task) =>
       !task.completed && task.date < today ? { ...task, date: today } : task
     );
     setTasks(updatedTasks);
-  };
+  }, [tasks]);
 
-  // Run carry-over function on mount
+  // Alternative: If you plan to use carryOverTasks elsewhere
+  /*
+  const carryOverTasks = useCallback(() => {
+    const today = new Date().toISOString().split("T")[0];
+    const updatedTasks = tasks.map((task) =>
+      !task.completed && task.date < today ? { ...task, date: today } : task
+    );
+    setTasks(updatedTasks);
+  }, [tasks]);
+
   useEffect(() => {
     carryOverTasks();
   }, [carryOverTasks]);
+  */
 
   // Request notification permission when the app loads
   useEffect(() => {
